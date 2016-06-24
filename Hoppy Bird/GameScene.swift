@@ -97,6 +97,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+        /* Skip game update if game no longer active */
+        if gameState != .Active { return }
+        
+
         
         /* Grab current velocity */
         let velocityY = hero.physicsBody?.velocity.dy ?? 0
@@ -116,7 +120,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         /* Clamp rotation */
         hero.zRotation.clamp(CGFloat(-45).degreesToRadians(),CGFloat(30).degreesToRadians())
-        hero.physicsBody?.angularVelocity.clamp(-2, 2)
+        hero.physicsBody?.angularVelocity.clamp(-3, 4)
         
         /* Update last touch timer */
         sinceTouch += fixedDelta
@@ -130,9 +134,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         /*Update time*/
         spawnTimer += fixedDelta
-    
-        /* Skip game update if game no longer active */
-        if gameState != .Active { return }
     
        
     }//<-------End of this function---------------------------------->
@@ -161,15 +162,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }//<-------End of this function---------------------------------->
+    
     func didBeginContact(contact: SKPhysicsContact) {
 
         /* Ensure only called while game running */
         if gameState != .Active { return }
         
         /* Hero touches anything, game over */
-        
-        /* Change game state to game over */
-        gameState = .GameOver
         
         /* Get references to bodies involved in collision */
         let contactA:SKPhysicsBody = contact.bodyA
@@ -191,6 +190,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             /* We can return now */
             return
         }
+        
+        /* Change game state to game over */
+        gameState = .GameOver
+        
         
         /* Stop any new angular velocity being applied */
         hero.physicsBody?.allowsRotation = false
@@ -225,8 +228,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         /* Show restart button */
         buttonRestart.state = .Active
-    }
-    //<-------End of this function---------------------------------->
+    }//<-------End of this function---------------------------------->
+    
     func updateObstacles() {
         /* Update Obstacles */
         let fixedDelta: CFTimeInterval = 1.0/60.0 /* 60 FPS*/
