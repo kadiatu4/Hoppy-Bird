@@ -26,6 +26,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
    var gameState: GameSceneState = .Active
    var scoreLabel: SKLabelNode!
    var points = 0
+   let fixedDelta: CFTimeInterval = 1.0/60.0 /* 60 FPS*/
+   let scrollSpeed: CGFloat = 160
+   
     
     override func didMoveToView(view: SKView) {
    
@@ -38,16 +41,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     /* Set reference to obstacle layer node */
         obstacleLayer = self.childNodeWithName("obstacleLayer")
         
-        /* Set physics contact delegate */
+    /* Set physics contact delegate */
         physicsWorld.contactDelegate = self
         
-        /* Set UI connections */
+    /* Set UI connections */
         buttonRestart = self.childNodeWithName("buttonRestart") as! MSButtonNode
         
-        /* Set reference to Score Label */
+    /* Set reference to Score Label */
          scoreLabel = self.childNodeWithName("scoreLabel") as! SKLabelNode
         
-        /* Setup restart button selection handler */
+    /* Setup restart button selection handler */
         buttonRestart.selectedHandler = {
             
             /* Grab reference to our SpriteKit view */
@@ -63,10 +66,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             skView.presentScene(scene)
             
         }
-        /* Hide restart button */
+    /* Hide restart button */
         buttonRestart.state = .Hidden
       
-        /* Reset Score label */
+    /* Reset Score label */
         scoreLabel.text = String(points)
         
     } //<-------End of this function---------------------------------->
@@ -110,10 +113,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             hero.physicsBody?.velocity.dy = 400
         }
         
-    
-        /* Apply falling rotation */
-        let fixedDelta: CFTimeInterval = 1.0/60.0 /* 60 FPS*/
-        
         if sinceTouch > 0.1 {
             let impulse = -20000 * fixedDelta
             hero.physicsBody?.applyAngularImpulse(CGFloat(impulse))
@@ -139,8 +138,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }//<-------End of this function---------------------------------->
 
     func scrollWorld() {
-        let fixedDelta: CFTimeInterval = 1.0/60.0 /* 60 FPS*/
-        let scrollSpeed: CGFloat = 160
+       
         
         /* Scroll World */
           scrollLayer.position.x -= scrollSpeed * CGFloat(fixedDelta)
@@ -232,9 +230,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func updateObstacles() {
         /* Update Obstacles */
-        let fixedDelta: CFTimeInterval = 1.0/60.0 /* 60 FPS*/
-        let scrollSpeed: CGFloat = 160
-
+    
         obstacleLayer.position.x -= scrollSpeed * CGFloat(fixedDelta)
         
         /* Loop through obstacle layer nodes */
